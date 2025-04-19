@@ -6,15 +6,22 @@ namespace ASPCourseProjects.Auth.Controllers
 {
     public class AccountController : Controller
     {
-        public readonly UserManager<IdentityUser> _userManager;
-        public AccountController(UserManager<IdentityUser> usermanager)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+
+        public AccountController(UserManager<IdentityUser> usermanager, SignInManager<IdentityUser> signInManager)
         {
             _userManager = usermanager;
+            _signInManager = signInManager;
         }
+
+        // Register - GET
         public IActionResult Register()
         {
             return View();
         }
+
+        // Register - POST
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -33,6 +40,31 @@ namespace ASPCourseProjects.Auth.Controllers
                 }
                 return RedirectToAction("Register");
             }
+            return View();
+        }
+
+        // Login - GET
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // Login - POST
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            if (result != null && result.Succeeded)
+            {
+                return RedirectToAction("LoginSuccess", "Account");
+            }
+            ModelState.AddModelError("", "Invalid login attempt.");
+            return View();
+        }
+
+        // Login Success
+        public IActionResult LoginSuccess()
+        {
             return View();
         }
     }

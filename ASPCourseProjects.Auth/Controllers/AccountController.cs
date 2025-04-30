@@ -1,4 +1,5 @@
 ﻿using ASPCourseProjects.Auth.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,6 +74,12 @@ namespace ASPCourseProjects.Auth.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Admin()
+        {
+            return View();
         }
     }
 }

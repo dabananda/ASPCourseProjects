@@ -1,4 +1,5 @@
 using ASPCourseProjects.Auth.Data;
+using ASPCourseProjects.Auth.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 });
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
+
+builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 var app = builder.Build();
 
